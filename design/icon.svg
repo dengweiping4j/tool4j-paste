@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Tool4J Paste 图标
+     蓝色取自界面强调色（深色 #4C9AFF / 浅色 #0A7CFF）。
+     白色卡片复刻面板里卡片的真实结构：橙色顶带 + 内容线。
+     后面露出的淡白卡片表示「历史里还有别的条目」。
+     生成图标：npx tauri icon design/icon.svg -->
+<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 200 200">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0.45" y2="1">
+      <stop offset="0" stop-color="#5E8DFF"/>
+      <stop offset="1" stop-color="#2F5BE0"/>
+    </linearGradient>
+  </defs>
+
+  <!-- 底色 -->
+  <rect width="200" height="200" rx="46" fill="url(#bg)"/>
+
+  <!-- 后层卡片：历史 -->
+  <rect x="46" y="38" width="76" height="94" rx="12" fill="#ffffff" opacity="0.34"/>
+
+  <!-- 前层卡片 -->
+  <rect x="66" y="58" width="88" height="104" rx="14" fill="#ffffff"/>
+
+  <!-- 顶部色带（对应界面卡片顶部的类型色） -->
+  <path d="M80 58 h60 a14 14 0 0 1 14 14 v12 h-88 v-12 a14 14 0 0 1 14 -14 z" fill="#F59E0B"/>
+
+  <!-- 内容线 -->
+  <rect x="82" y="100" width="56" height="8" rx="4" fill="#2F5BE0" opacity="0.38"/>
+  <rect x="82" y="116" width="56" height="8" rx="4" fill="#2F5BE0" opacity="0.38"/>
+  <rect x="82" y="132" width="34" height="8" rx="4" fill="#2F5BE0" opacity="0.22"/>
+</svg>

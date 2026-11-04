@@ -1,0 +1,15 @@
+node_modules/
+dist/
+.idea/
+.DS_Store
+*.local
+
+# Rust
+src-tauri/target/
+src-tauri/gen/schemas/
+
+# 本地数据（调试时可能落在项目内）
+*.db
+*.db-wal
+*.db-shm
+.workbuddy

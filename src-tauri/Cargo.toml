@@ -1,0 +1,50 @@
+[package]
+name = "tool4j-paste"
+version = "0.1.6"
+description = "轻量级 Windows 剪贴板历史管理器"
+license = "MIT"
+edition = "2021"
+rust-version = "1.77.2"
+
+[lib]
+name = "tool4j_paste_lib"
+crate-type = ["staticlib", "cdylib", "rlib"]
+
+[build-dependencies]
+tauri-build = { version = "2", features = [] }
+
+[dependencies]
+tauri = { version = "2", features = ["tray-icon", "protocol-asset"] }
+tauri-plugin-global-shortcut = "2"
+tauri-plugin-single-instance = "2"
+tauri-plugin-autostart = "2"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+rusqlite = { version = "0.32", features = ["bundled"] }
+# 生成缩略图用：覆盖常见的位图格式，不开 svg/tiff 等冷门解码器以控制体积
+image = { version = "0.25", default-features = false, features = ["png", "jpeg", "webp", "gif", "bmp"] }
+sha2 = "0.10"
+tracing = "0.1"
+tracing-subscriber = "0.3"
+
+[target.'cfg(windows)'.dependencies]
+# 用 windows-sys 而非 windows：签名即 Win32 原型（BOOL 就是 i32，句柄就是裸指针），
+# 没有 IntoParam 泛型与 Result 包装的版本差异，代码更直白也更好核对。
+windows-sys = { version = "0.59", features = [
+    "Win32_Foundation",
+    "Win32_System_DataExchange",
+    "Win32_System_Memory",
+    "Win32_System_Threading",
+    "Win32_Graphics_Gdi",
+    "Win32_Graphics_Dwm",
+    "Win32_UI_WindowsAndMessaging",
+    "Win32_UI_Input_KeyboardAndMouse",
+    "Win32_UI_Shell",
+] }
+
+# 体积优先：体积指标是产品挑战目标，且业务本身没有热点计算
+[profile.release]
+opt-level = "s"
+lto = true
+codegen-units = 1
+strip = true
