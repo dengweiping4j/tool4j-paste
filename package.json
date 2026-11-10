@@ -1,7 +1,7 @@
 {
   "name": "tool4j-paste",
   "private": true,
-  "version": "0.1.6",
+  "version": "0.1.7",
   "type": "module",
   "description": "轻量级 Windows 剪贴板历史管理器",
   "scripts": {

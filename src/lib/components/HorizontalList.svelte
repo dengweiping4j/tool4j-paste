@@ -73,6 +73,9 @@
     } else if (right > el.scrollLeft + el.clientWidth) {
       el.scrollLeft = right - el.clientWidth;
     }
+    // 程序化滚动后立刻同步位置，不必等滚动事件在下一帧到达，
+    // 否则虚拟列表会先用旧区间渲染一帧，出现空白
+    scrollLeft = el.scrollLeft;
   }
 
   // 键盘左右切换时保持选中卡片可见

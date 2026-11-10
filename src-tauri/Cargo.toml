@@ -1,6 +1,6 @@
 [package]
 name = "tool4j-paste"
-version = "0.1.6"
+version = "0.1.7"
 description = "轻量级 Windows 剪贴板历史管理器"
 license = "MIT"
 edition = "2021"
