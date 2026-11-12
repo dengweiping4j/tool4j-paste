@@ -41,7 +41,7 @@ function pad(n: number): string {
   return n < 10 ? `0${n}` : String(n);
 }
 
-/** 卡片色带上的紧凑时间：刚刚 / 5分 / 2时 / 3天 / 4月8日 */
+/** 卡片色带上的时间：刚刚 / 3 分钟前 / 2 小时前 / 2 天前 / 4月8日 */
 export function shortRelativeTime(timestamp: number): string {
   const diff = Math.max(0, Date.now() - timestamp);
   const minute = 60_000;
@@ -49,12 +49,15 @@ export function shortRelativeTime(timestamp: number): string {
   const day = 24 * hour;
 
   if (diff < minute) return "刚刚";
-  if (diff < hour) return `${Math.floor(diff / minute)}分`;
-  if (diff < day) return `${Math.floor(diff / hour)}时`;
-  if (diff < 30 * day) return `${Math.floor(diff / day)}天`;
+  if (diff < hour) return `${Math.floor(diff / minute)} 分钟前`;
+  if (diff < day) return `${Math.floor(diff / hour)} 小时前`;
+  // 超过一个月改用具体日期，「300 天前」这类说法对用户没有意义
+  if (diff < 30 * day) return `${Math.floor(diff / day)} 天前`;
 
   const date = new Date(timestamp);
-  return `${date.getMonth() + 1}月${date.getDate()}日`;
+  const monthAndDay = `${date.getMonth() + 1}月${date.getDate()}日`;
+  if (date.getFullYear() === new Date().getFullYear()) return monthAndDay;
+  return `${date.getFullYear()}/${date.getMonth() + 1}/${date.getDate()}`;
 }
 
 /** 类型的中文名称，用于筛选栏与提示 */

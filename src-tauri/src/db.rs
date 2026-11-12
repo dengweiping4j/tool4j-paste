@@ -235,26 +235,27 @@ fn escape_like(input: &str) -> String {
         .replace('_', "\\_")
 }
 
-/// 返回 Some(id) 表示新插入；None 表示与上一条内容相同，仅更新了使用时间。
+/// 返回 Some(id) 表示新插入；None 表示内容已在历史中，仅把它刷新到列表最前。
 pub fn insert(conn: &mut Connection, item: NewItem) -> rusqlite::Result<Option<i64>> {
     let now = now_ms();
 
-    let latest: Option<(i64, String)> = conn
+    // 在全部历史里按内容指纹查找，而不是只比对上一条。
+    // 命中就刷新使用时间，列表按 last_used_at 排序，卡片自然回到最前面。
+    // 旧库里若已有多张同内容卡片，固定命中最早那张，行为稳定可预期。
+    let existing: Option<i64> = conn
         .query_row(
-            "SELECT id, content_hash FROM items ORDER BY created_at DESC, id DESC LIMIT 1",
-            [],
-            |row| Ok((row.get(0)?, row.get(1)?)),
+            "SELECT id FROM items WHERE content_hash = ?1 ORDER BY id ASC LIMIT 1",
+            params![item.content_hash],
+            |row| row.get(0),
         )
         .optional()?;
 
-    if let Some((id, hash)) = latest {
-        if hash == item.content_hash {
-            conn.execute(
-                "UPDATE items SET last_used_at = ?1 WHERE id = ?2",
-                params![now, id],
-            )?;
-            return Ok(None);
-        }
+    if let Some(id) = existing {
+        conn.execute(
+            "UPDATE items SET last_used_at = ?1 WHERE id = ?2",
+            params![now, id],
+        )?;
+        return Ok(None);
     }
 
     let tx = conn.transaction()?;

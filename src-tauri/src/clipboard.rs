@@ -691,10 +691,10 @@ pub fn spawn_watcher(app: AppHandle) {
                 };
 
                 match inserted {
-                    Ok(Some(_)) => {
-                        let _ = app.emit("item-created", ());
+                    // 新增卡片、或把同内容的旧卡片提到最前，都要让界面重取一次列表
+                    Ok(_) => {
+                        let _ = app.emit("history-changed", ());
                     }
-                    Ok(None) => {}
                     Err(error) => tracing::error!("写入历史失败：{error}"),
                 }
             }

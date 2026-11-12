@@ -136,11 +136,11 @@
     return () => window.removeEventListener("focus", onFocus);
   });
 
-  // 后端记录到新内容时刷新当前列表
+  // 后端新增卡片、或把重复内容提到最前时，刷新当前列表
   $effect(() => {
     if (!IS_TAURI) return;
     let disposed = false;
-    const unlisten = listen("item-created", () => {
+    const unlisten = listen("history-changed", () => {
       if (!disposed) reload();
     });
     return () => {
